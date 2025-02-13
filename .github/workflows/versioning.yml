@@ -10,17 +10,17 @@ on:
 
         outputs:
             version_info:
-                value: ${{ jobs.pr-versioning.outputs.pr-build-tag || jobs.ci-versioning.outputs.ci-version-tag }}
+                value: ${{ jobs.setup-versioning.outputs.pr-build-tag || jobs.setup-versioning.outputs.ci-build-tag }}
                 description: "Appropriate version tag for PR or CI"
     
 jobs:
-    pr-versioning:
+    setup-versioning:
         timeout-minutes: 10
         runs-on: [ ubuntu-latest ]
-        if: ${{ inputs.trigger_type == 'PR' }}
 
         outputs:
-            pr-build-tag: ${{ steps.generate-pr-tag.outputs.PR_BUILD_TAG }}
+          pr-build-tag: ${{ steps.generate-pr-tag.outputs.PR_BUILD_TAG }}
+          ci-build-tag: ${{ steps.generate-ci-tag.outputs.CI_BUILD_TAG }}
 
         steps:
             - name: Checkout Branch
@@ -29,28 +29,15 @@ jobs:
                 fetch-depth: 0
                 token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Generate PR build tag
+            - if: ${{ inputs.trigger_type == 'PR' }}
+              name: Generate PR build tag
               id: generate-pr-tag
               run: |
                 shortened_sha=$(echo "${{ github.sha }} | cut -c 1-7")
                 echo "PR_BUILD_TAG=BUILD_$shortened_sha" >> $GITHUB_OUTPUT
-
-    ci-versioning:
-        timeout-minutes: 10
-        runs-on: [ ubuntu-latest ]
-        if: ${{ inputs.trigger_type == 'CI' }}
-
-        outputs:
-            ci-version-tag: ${{ steps.generate-ci-tag.outputs.CI_BUILD_TAG }}
-
-        steps:
-          - name: Checkout Branch
-            uses: actions/checkout@v4
-            with:
-              fetch-depth: 0
-              token: ${{ secrets.GITHUB_TOKEN }}
-
-          - name: Generate CI tag
-            id: generate-ci-tag
-            run: |
-              echo "CI_BUILD_TAG=$(git log --merges --oneline ${{ github.base_ref }} | wc -l)"
+                
+            - if: ${{ inputs.trigger_type == 'CI' }}
+              name: Generate CI tag
+              id: generate-ci-tag
+              run: |
+                echo "CI_BUILD_TAG=$(git log --merges --oneline ${{ github.base_ref }} | wc -l)" >> $GITHUB_OUTPUT
