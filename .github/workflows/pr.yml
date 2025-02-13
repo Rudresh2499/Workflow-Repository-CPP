@@ -1,0 +1,36 @@
+name: PR-Workflow-Template
+
+on:
+    workflow_call: 
+        inputs:
+            workflow_type:
+                required: true
+                description: "Defines the workflow type i.e. PR/CI"
+                type: string
+
+concurrency: 
+    group:  ${{ github.head_ref }}-${{ github.base_ref }}
+    cancel-in-progress: true
+
+jobs:
+    pr-versioning:
+        uses: ./.github/workflows/versioning.yml
+        secrets: inherit
+        with:
+            workflow_type: ${{ inputs.workflow_type }}
+
+    pr-build:
+        uses: ./.github/workflows/build.yml
+        needs: pr-versioning
+        secrets: inherit
+        with:
+            workflow_type: ${{ inputs.workflow_type }}
+            pr_build_version: ${{ needs.pr-versioning.outputs.version_info }}
+
+    pr-build-test:
+        uses: ./.github/workflows/test.yml
+        secrets: inherit
+        with:
+            workflow_type: ${{ inputs.workflow_type }}
+            pr_build_version: ${{ needs.pr-versioning.outputs.version_info }}
+    

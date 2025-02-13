@@ -1,0 +1,21 @@
+name: trigger-controller
+
+on:
+    pull_request: 
+        branches: [ master ]
+        types: [ closed, opened, synchronize, reopened ]
+
+jobs:
+    pr:
+        uses: ./.github/workflows/pr.yml
+        if: ${{ github.event.pull_request.head.sha != github.event.pull_request.base.ref }}
+        secrets: inherit
+        with:
+            workflow_type: 'PR'
+
+    ci:
+        uses: ./.github/workflows/ci.yml
+        if: ${{ github.event.pull_request.merged == true }}
+        secrets: inherit
+        with:
+            workflow_type: 'CI'
