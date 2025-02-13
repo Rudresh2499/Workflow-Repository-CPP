@@ -13,9 +13,9 @@ jobs:
         with:
             workflow_type: 'PR'
 
-    ci:
-        uses: ./.github/workflows/ci.yml
-        if: ${{ github.event.pull_request.merged == true }}
-        secrets: inherit
-        with:
-            workflow_type: 'CI'
+    # ci:
+    #     uses: ./.github/workflows/ci.yml
+    #     if: ${{ github.event.pull_request.merged == true }}
+    #     secrets: inherit
+    #     with:
+    #         workflow_type: 'CI'
