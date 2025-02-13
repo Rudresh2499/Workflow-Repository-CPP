@@ -17,7 +17,7 @@ jobs:
         uses: ./.github/workflows/versioning.yml
         secrets: inherit
         with:
-            workflow_type: ${{ inputs.workflow_type }}
+            trigger_type: ${{ inputs.workflow_type }}
 
     # pr-build:
     #     uses: ./.github/workflows/build.yml
