@@ -6,22 +6,12 @@ on:
         types: [ closed, opened, synchronize, reopened ]
 
 jobs:
-
-    test:
-        runs-on: [ ubuntu-latest ]
-        steps:
-            - name: Test
-              run: |
-                echo ${{ github.event.pull_request.head.ref }}
-                echo ${{ github.event.pull_request.base.ref }}
-                echo ${{ github.event.action }}
-
-    # pr:
-    #     uses: ./.github/workflows/pr.yml
-    #     if: ${{ github.event.pull_request.head.ref != github.event.pull_request.base.ref }}
-    #     secrets: inherit
-    #     with:
-    #         workflow_type: 'PR'
+    pr:
+        uses: ./.github/workflows/pr.yml
+        if: ${{ github.event.action != 'closed' }}
+        secrets: inherit
+        with:
+            workflow_type: 'PR'
 
     # ci:
     #     uses: ./.github/workflows/ci.yml
