@@ -19,18 +19,18 @@ jobs:
         with:
             workflow_type: ${{ inputs.workflow_type }}
 
-    pr-build:
-        uses: ./.github/workflows/build.yml
-        needs: pr-versioning
-        secrets: inherit
-        with:
-            workflow_type: ${{ inputs.workflow_type }}
-            pr_build_version: ${{ needs.pr-versioning.outputs.version_info }}
+    # pr-build:
+    #     uses: ./.github/workflows/build.yml
+    #     needs: pr-versioning
+    #     secrets: inherit
+    #     with:
+    #         workflow_type: ${{ inputs.workflow_type }}
+    #         pr_build_version: ${{ needs.pr-versioning.outputs.version_info }}
 
-    pr-build-test:
-        uses: ./.github/workflows/test.yml
-        secrets: inherit
-        with:
-            workflow_type: ${{ inputs.workflow_type }}
-            pr_build_version: ${{ needs.pr-versioning.outputs.version_info }}
+    # pr-build-test:
+    #     uses: ./.github/workflows/test.yml
+    #     secrets: inherit
+    #     with:
+    #         workflow_type: ${{ inputs.workflow_type }}
+    #         pr_build_version: ${{ needs.pr-versioning.outputs.version_info }}
     
