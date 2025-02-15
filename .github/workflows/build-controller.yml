@@ -21,11 +21,16 @@ on:
                 type: boolean
 
 jobs:
-    trigger-build-cpp:
-        if: ${{ inputs.changed_files == 'CPP' }}
-        uses: ./.github/workflows/build-trigger-cpp.yml
+    build-cpp-linux:
+        if: ${{ inputs.changed_files == 'CPP' && inputs.linux_platform_build }}
+        uses: ./.github/workflows/build-cpp-linux.yml
         secrets: inherit
         with:
             pr_build_version: ${{ inputs.pr_build_version }}
-            linux_platform_build: ${{ inputs.linux_platform_build }}
-            windows_platform_build: ${{ inputs.windows_platform_build }}
+
+    build-cpp-windows:
+        if: ${{ inputs.changed_files == 'CPP' && inputs.windows_platform_build }}
+        uses: ./.github/workflows/build-cpp-linux.yml
+        secrets: inherit
+        with:
+            pr_build_version: ${{ inputs.pr_build_version }}
