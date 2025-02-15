@@ -1,0 +1,41 @@
+name: build-cpp-linux
+
+on:
+    workflow_call:
+        inputs:
+            pr_build_version:
+                required: true
+                description: 'Provides versioning details of the PR'
+                type: string
+
+
+env:
+    DOCKER_IMAGE: Placeholder
+
+jobs:
+    build-cpp-linux:
+        timeout-minutes: 10
+        runs-on: [ ubuntu-latest ]
+
+        container: 
+          image: ${{ env.DOCKER_IMAGE }}
+          credentials:
+            username: ${{ secrets.CONTAINER_USERNAME }}
+            password: ${{ secrets.CONTAINER_PASSWORD }}
+          volumes:
+            - .:/repo
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+                token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Configure CMake for Release
+              run: >-
+                cmake --preset Configure-Linux-Release
+
+            - name: Build C++ Code
+              run: >-
+                cmake --build --preset Build-Linux-Release

@@ -1,0 +1,57 @@
+name: build-cpp-windows
+
+on:
+    workflow_call:
+        inputs:
+            pr_build_version:
+                required: true
+                description: 'Provides versioning details of the PR'
+                type: string
+
+env:
+    DOCKER_IMAGE: Placeholder
+    CONTAINER_NAME: Windows-Build-Container
+
+jobs:
+    build-cpp-windows:
+        timeout-minutes: 10
+        runs-on: [ windows-2022 ]
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+                token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Pull and start docker container
+              run: >-
+                docker run 
+                --name ${{ env.CONTAINER_NAME }}
+                -v ${{ github.workspace }}:C:\dev
+                -w C:\dev
+                -m 4GB
+                -dt
+                ${{ env.DOCKER_IMAGE }}
+
+            - name: Configure CMake for Release
+              run: >-
+                docker exec ${{ env.CONTAINER_NAME }} cmd /c
+                cmake --preset Configure-Windows-Release
+
+            - name: Build C++ Code
+              run: >-
+                docker exec ${{ env.CONTAINER_NAME }} cmd /c
+                cmake --build --preset Build-Linux-Release
+
+            - name: Stop docker container
+              run: >-
+                docker container stop ${{ env.CONTAINER_NAME }}
+
+            - name: Kill docker container
+              run: >-
+                docker container rm ${{ env.CONTAINER_NAME }}
+
+            - name: Remove docker image
+              run: >-
+                docker image rm ${{ env.DOCKER_IMAGE }}
