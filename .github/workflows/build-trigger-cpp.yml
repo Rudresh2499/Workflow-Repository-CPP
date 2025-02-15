@@ -24,14 +24,14 @@ on:
 jobs:
     cpp-build-linux:
         if: ${{ inputs.linux_platform_build }}
-        uses: ./.github/workflows/build-workflows/cpp/build-cpp-linux.yml
+        uses: ./.github/workflows/build-cpp-linux.yml
         secrets: inherit
         with:
             pr_build_version: ${{ inputs.pr_build_version }}
 
     cpp-build-windows:
         if: ${{ inputs.windows_platform_build }}
-        uses: ./.github/workflows/build-workflows/cpp/build-cpp-windows.yml
+        uses: ./.github/workflows/build-cpp-windows.yml
         secrets: inherit
         with:
             pr_build_version: ${{ inputs.pr_build_version }}
