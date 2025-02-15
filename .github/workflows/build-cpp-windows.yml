@@ -25,7 +25,7 @@ jobs:
                 token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Pull and start docker container
-              runs: >-
+              run: >-
                 docker run 
                 --name ${{ env.CONTAINER_NAME }}
                 -v ${{ github.workspace }}:C:\dev
@@ -35,23 +35,23 @@ jobs:
                 ${{ env.DOCKER_IMAGE }}
 
             - name: Configure CMake for Release
-              runs: >-
+              run: >-
                 docker exec ${{ env.CONTAINER_NAME }} cmd /c
                 cmake --preset Configure-Windows-Release
 
             - name: Build C++ Code
-              runs: >-
+              run: >-
                 docker exec ${{ env.CONTAINER_NAME }} cmd /c
                 cmake --build --preset Build-Linux-Release
 
             - name: Stop docker container
-              runs: >-
+              run: >-
                 docker container stop ${{ env.CONTAINER_NAME }}
 
             - name: Kill docker container
-              runs: >-
+              run: >-
                 docker container rm ${{ env.CONTAINER_NAME }}
 
             - name: Remove docker image
-              runs: >-
+              run: >-
                 docker image rm ${{ env.DOCKER_IMAGE }}

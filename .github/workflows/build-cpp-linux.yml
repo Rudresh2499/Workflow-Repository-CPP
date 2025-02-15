@@ -8,6 +8,7 @@ on:
                 description: 'Provides versioning details of the PR'
                 type: string
 
+
 env:
     DOCKER_IMAGE: Placeholder
 
@@ -31,9 +32,9 @@ jobs:
                 token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Configure CMake for Release
-              runs: >-
+              run: >-
                 cmake --preset Configure-Linux-Release
 
             - name: Build C++ Code
-              runs: >-
+              run: >-
                 cmake --build --preset Build-Linux-Release
