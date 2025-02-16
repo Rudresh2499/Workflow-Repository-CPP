@@ -7,6 +7,18 @@ on:
                 required: true
                 description: "Defines the workflow type i.e. PR/CI"
                 type: string
+            changed_files:
+                required: true
+                description: "Describes the files changed in the PR/CI"
+                type: string
+            linux_platform_build:
+                required: true
+                description: "Flag for linux platform build"
+                type: boolean
+            windows_platform_build:
+                required: true
+                description: "Flag for windows platform build"
+                type: boolean
 
 concurrency: 
     group:  ${{ github.head_ref }}-${{ github.base_ref }}
