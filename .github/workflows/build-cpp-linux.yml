@@ -8,22 +8,18 @@ on:
                 description: 'Provides versioning details of the PR'
                 type: string
 
-
-env:
-    DOCKER_IMAGE: Placeholder
-
 jobs:
     build-cpp-linux:
         timeout-minutes: 10
         runs-on: [ ubuntu-latest ]
 
-        container: 
-          image: ${{ env.DOCKER_IMAGE }}
-          credentials:
-            username: ${{ secrets.CONTAINER_USERNAME }}
-            password: ${{ secrets.CONTAINER_PASSWORD }}
-          volumes:
-            - .:/repo
+        # container: 
+        #   image: ${{ env.DOCKER_IMAGE }}
+        #   credentials:
+        #     username: ${{ secrets.CONTAINER_USERNAME }}
+        #     password: ${{ secrets.CONTAINER_PASSWORD }}
+        #   volumes:
+        #     - .:/repo
 
         steps:
             - name: Checkout repository
