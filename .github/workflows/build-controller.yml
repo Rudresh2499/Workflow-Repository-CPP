@@ -1,4 +1,4 @@
-name: build-controller.yml
+name: build-controller
 
 on:
     workflow_call: 

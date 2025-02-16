@@ -1,4 +1,4 @@
-name: PR-Workflow-Template
+name: ci-workflow
 
 on:
     workflow_call: 
@@ -30,3 +30,13 @@ jobs:
         secrets: inherit
         with:
             trigger_type: ${{ inputs.workflow_type }}
+
+    ci-build:
+        uses: ./.github/workflows/build-controller.yml
+        needs: ci-versioning
+        secrets: inherit
+        with:
+            changed_files: ${{ inputs.changed_files }}
+            pr_build_version: ${{ needs.pr-versioning.outputs.version_info }}
+            linux_platform_build: ${{ inputs.linux_platform_build }}
+            windows_platform_build: ${{ inputs.windows_platform_build }}
