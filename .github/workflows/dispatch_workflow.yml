@@ -1,0 +1,38 @@
+name: Manual Dispatch Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment Environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      version:
+        description: 'Application Version'
+        required: false
+        type: string
+      debug:
+        description: 'Enable Debug Mode'
+        required: false
+        type: boolean
+        default: false
+      approver:
+        description: 'Approver Name'
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Inputs
+        run: |
+          echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Version: ${{ github.event.inputs.version }}"
+          echo "Debug Mode: ${{ github.event.inputs.debug }}"
+          echo "Approver: ${{ github.event.inputs.approver }}"
