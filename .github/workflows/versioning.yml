@@ -17,6 +17,9 @@ jobs:
         timeout-minutes: 15
         
         steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              
             - name: Get change context
               id: path-filter
               uses: dorny/paths-filter@v3
