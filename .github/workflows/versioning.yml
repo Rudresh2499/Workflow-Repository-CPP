@@ -1,0 +1,32 @@
+name: versioning
+
+on:
+    pull_request: 
+        branches: master
+        types: [ opened, synchronize, reopened ]
+    # workflow_call: 
+    #     inputs:
+    #         workflow_type:
+    #             description: Describes the workflow type
+    #             required: true
+    #             type: string
+
+jobs:
+    versioning:
+        runs-on: [ ubuntu-latest ]
+        timeout-minutes: 15
+        
+        steps:
+            - name: Get change context
+              id: path-filter
+              uses: dorny/paths-filter@v3
+              with:
+                list-files: csv
+                filters: |
+                  changed:
+                  - '**'
+
+            - name: Evaluate changed files
+              id: change-context
+              run: |
+                ${{ github.workspace }}\scripts\evaluate-change-context.sh ${{ steps.path-filter.outputs.changed_files }}
