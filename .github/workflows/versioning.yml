@@ -19,7 +19,7 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
-              
+
             - name: Get change context
               id: path-filter
               uses: dorny/paths-filter@v3
@@ -32,4 +32,5 @@ jobs:
             - name: Evaluate changed files
               id: change-context
               run: |
+                chmod +x -R ${{ github.workspace }}/scripts
                 ${{ github.workspace }}/scripts/evaluate-change-context.sh ${{ steps.path-filter.outputs.changed_files }}
