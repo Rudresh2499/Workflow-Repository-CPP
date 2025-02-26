@@ -13,6 +13,7 @@ unit_test_filters: &unit_test_filters
 
 workflow_filters: &workflow_filters
   - '.github/workflows/**'
+  - '.github/**'
 
 environment_filters: &environment_filters
   - 'scripts/**'
@@ -24,4 +25,5 @@ environment_filters: &environment_filters
 code_filters: &code_filters
   - '**.cpp'
   - '**.h'
-  - '!(UnitTests)/**'
+  - '!(UnitTests)/**/*.cpp'
+  - '!(UnitTests)/**/*.h'
