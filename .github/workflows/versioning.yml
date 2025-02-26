@@ -25,12 +25,4 @@ jobs:
               uses: dorny/paths-filter@v3
               with:
                 list-files: csv
-                filters: |
-                  changed:
-                  - '**'
-
-            - name: Evaluate changed files
-              id: change-context
-              run: |
-                chmod +x -R ${{ github.workspace }}/scripts
-                ${{ github.workspace }}/scripts/evaluate-change-context.sh ${{ steps.path-filter.outputs.changed_files }}
+                filters: .github/filters.yml
