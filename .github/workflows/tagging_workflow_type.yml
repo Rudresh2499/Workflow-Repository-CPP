@@ -9,7 +9,7 @@ on:
                 type: string
         outputs:
             workflow_type_tag:
-                value: 
+                value: ${{ jobs.workflow_type_tagging.outputs.workflow_type_tag }}
                 description: "Tags the type of workflow run"
 
 jobs:
