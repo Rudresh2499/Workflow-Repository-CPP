@@ -1,0 +1,19 @@
+name: pr-workflow
+
+on:
+    pull_request: 
+        branches: [ master ]
+        types: [ opened, synchronize, reopened ]
+
+concurrency: 
+    group: ${{ github.ref_name }}-${{ github.workflow }}
+    cancel-in-progress: true
+
+
+jobs:
+    versioning:
+        uses: ./.github/workflows/versioning.yml
+        secrets: inherit
+        with:
+            workflow_type: PR
+        
