@@ -48,19 +48,19 @@ jobs:
                 echo "change_context_tag=env" >> $GITHUB_OUTPUT
 
             - name: Tag run for workflow change
-              if: ${{ !steps.path-filter.outputs.environment_filters == 'false' && steps.path-filter.outputs.workflow_filters == 'true' }}
+              if: ${{ steps.path-filter.outputs.environment_filters == 'false' && steps.path-filter.outputs.workflow_filters == 'true' }}
               id: workflow-update-tag
               run: 
                 echo "change_context_tag=wflow" >> $GITHUB_OUTPUT
 
             - name: Tag run for unit test change
-              if: ${{ !steps.path-filter.outputs.workflow_filters == 'false' && steps.path-filter.outputs.unit_test_filters == 'true' }}
+              if: ${{ steps.path-filter.outputs.workflow_filters == 'false' && steps.path-filter.outputs.unit_test_filters == 'true' }}
               id: unit-test-update-tag
               run:
                 echo "change_context_tag=test" >> $GITHUB_OUTPUT
 
             - name: Tag run for document change
-              if: ${{ !steps.path-filter.outputs.unit_test_filters == 'false' && steps.path-filter.outputs.doc_filters == 'true' }}
+              if: ${{ steps.path-filter.outputs.unit_test_filters == 'false' && steps.path-filter.outputs.doc_filters == 'true' }}
               id: doc-update-tag
               run:
                 echo "change_context_tag=doc" >> $GITHUB_OUTPUT
