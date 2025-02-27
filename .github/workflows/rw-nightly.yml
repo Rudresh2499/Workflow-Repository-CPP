@@ -1,0 +1,16 @@
+name: nightly-build-workflow
+
+on:
+    workflow_call: 
+        inputs:
+            workflow_type:
+                description: "Describes the workflow type"
+                required: true
+                type: string
+
+jobs:
+    versioning:
+        uses: ./.github/workflows/versioning.yml
+        secrets: inherit
+        with:
+            workflow_type: ${{ inputs.workflow_type }}

@@ -1,0 +1,29 @@
+# This is to be provided as an input to the action - 'dorny/paths-filter@v3'.
+# It contains the rules to be applied to get the change context
+
+doc_filters: &doc_filters
+  - '**.md'
+  - '**.mmd'
+  - '**.docx'
+  - 'doc/**'
+  - 'design/**'
+
+unit_test_filters: &unit_test_filters
+  - 'UnitTests/**'
+
+workflow_filters: &workflow_filters
+  - '.github/workflows/**'
+  - '.github/**'
+
+environment_filters: &environment_filters
+  - 'scripts/**'
+  - '**CMakeLists.txt'
+  - 'CMakePresets.json'
+  - 'conanfile.txt'
+  - 'toolchain.cmake'
+
+code_filters: &code_filters
+  - '**.cpp'
+  - '**.h'
+  - '!(UnitTests)/**/*.cpp'
+  - '!(UnitTests)/**/*.h'

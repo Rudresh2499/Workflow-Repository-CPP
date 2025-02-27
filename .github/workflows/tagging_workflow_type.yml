@@ -1,0 +1,51 @@
+name: tagging-workflow-type
+
+on:
+    workflow_call:
+        inputs:
+            workflow_type:
+                description: "Describes the workflow type"
+                required: true
+                type: string
+        outputs:
+            workflow_type_tag:
+                value: ${{ jobs.workflow_type_tagging.outputs.workflow_type_tag }}
+                description: "Tags the type of workflow run"
+
+jobs:
+    workflow_type_tagging:
+        runs-on: [ ubuntu-latest ]
+        timeout-minutes: 10
+
+        outputs:
+            workflow_type_tag: ${{ steps.workflow-type-tag.outputs.workflow_type_tag }}
+
+        steps:
+            - name: Tag run as a DEV build
+              if: ${{ inputs.workflow_type == 'DEV' }}
+              id: dev-build-tag
+              run:
+                  echo "tag=DEV_$(echo ${{ github.sha }} | cut -b 1-7)" >> $GITHUB_OUTPUT
+
+            - name: Tag run as a PR build
+              if: ${{ inputs.workflow_type == 'PR' }}
+              id: pr-build-tag
+              run:
+                  echo "tag=PR_$(echo ${{ github.sha }} | cut -b 1-7)" >> $GITHUB_OUTPUT
+            
+            - name: Tag run as a DEV build
+              if: ${{ inputs.workflow_type == 'CI' }}
+              id: ci-build-tag
+              run:
+                  echo "tag=v" >> $GITHUB_OUTPUT
+
+            - name: Tag run as a DEV build
+              if: ${{ inputs.workflow_type == 'NGT' }}
+              id: nightly-build-tag
+              run:
+                  echo "tag=NGT_$(date +'%d%m%y')" >> $GITHUB_OUTPUT
+                  
+            - name: Consolidate workflow type tag
+              id: workflow-type-tag
+              run:
+                  echo "workflow_type_tag=${{ steps.dev-build-tag.outputs.tag || steps.pr-build-tag.outputs.tag || steps.ci-build-tag.outputs.tag || steps.nightly-build-tag.outputs.tag }}" >> $GITHUB_OUTPUT
