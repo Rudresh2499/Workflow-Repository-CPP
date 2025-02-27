@@ -1,0 +1,20 @@
+name: test-trigger
+
+on:
+    pull_request: 
+        branches: [ master ]
+        types: [ opened, synchronize, reopened ]
+
+concurrency: 
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    pr-workflow:
+        uses: ./.github/workflows/rw-pr.yml
+        secrets: inherit
+        with:
+            workflow_type: PR
+            build_file_type: CPP
+            target_linux_platform: true
+            target_windows_platform: false

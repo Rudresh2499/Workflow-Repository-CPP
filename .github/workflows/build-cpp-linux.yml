@@ -1,0 +1,20 @@
+name: build-cpp-linux
+
+on:
+    workflow_call: 
+        inputs:
+            version_tag:
+                description: "Provides the version tag for the workflow run"
+                required: true
+                type: string
+
+
+jobs:
+    build-cpp-linux:
+        runs-on: [ ubuntu-latest ]
+        timeout-minutes: 10
+
+        steps:
+            - name: Test step
+              run: |
+                echo "Building on Linux"

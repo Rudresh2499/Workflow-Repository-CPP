@@ -1,0 +1,34 @@
+name: build-cpp
+
+on:
+    workflow_call: 
+        inputs:
+            version_tag:
+                description: "Provides the version tag for the workflow run"
+                required: true
+                type: string
+
+            target_linux_platform:
+                description: "Flag to enable build targeting the linux platform"
+                required: true
+                type: boolean
+
+            target_windows_platform:
+                description: "Flag to enable build targeting the windows platform"
+                required: true
+                type: boolean
+
+jobs:
+    build-cpp-linux:
+        if: ${{ inputs.target_linux_platform }}
+        uses: ./.github/workflows/build-cpp-linux.yml
+        secrets: inherit
+        with:
+            version_tag: ${{ inputs.version_tag }}
+
+    build-cpp-windows:
+        if: ${{ inputs.target_windows_platform }}
+        uses: ./.github/workflows/build-cpp-windows.yml
+        secrets: inherit
+        with:
+            version_tag: ${{ inputs.version_tag }}

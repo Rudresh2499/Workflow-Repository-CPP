@@ -1,10 +1,10 @@
-name: pr-workflow
+name: build-controller
 
 on:
-    workflow_call: 
+    workflow_call:
         inputs:
-            workflow_type:
-                description: "Describes the workflow type"
+            version_tag:
+                description: "Provides the version tag for the workflow run"
                 required: true
                 type: string
 
@@ -22,21 +22,24 @@ on:
                 description: "Flag to enable build targeting the windows platform"
                 required: true
                 type: boolean
+                
 
 jobs:
-    versioning:
-        uses: ./.github/workflows/versioning.yml
+    build-cpp:
+        uses: ./.github/workflows/build-cpp.yml
+        if: ${{ inputs.build_file_type == 'CPP' }}
         secrets: inherit
         with:
-            workflow_type: ${{ inputs.workflow_type }}
-
-    build-target:
-        needs: versioning
-        if: ${{ contains(needs.versioning.outputs.version_tag, 'doc') }}
-        uses: ./.github/workflows/build-controller.yml
-        secrets: inherit
-        with:
-            version_tag: ${{ needs.versioning.outputs.version_tag }}
-            build_file_type: ${{ inputs.build_file_type }}
             target_linux_platform: ${{ inputs.target_linux_platform }}
             target_windows_platform: ${{ inputs.target_windows_platform }}
+            version_tag: ${{ inputs.version_tag }}
+
+
+    build-docker:
+        uses: ./.github/workflows/build-docker.yml
+        if: ${{ inputs.build_file_type == 'DOCKER' }}
+        secrets: inherit
+        with:
+            target_linux_platform: ${{ inputs.target_linux_platform }}
+            target_windows_platform: ${{ inputs.target_windows_platform }}
+            version_tag: ${{ inputs.version_tag }}
