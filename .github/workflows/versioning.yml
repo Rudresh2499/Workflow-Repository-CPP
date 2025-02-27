@@ -26,3 +26,33 @@ jobs:
               with:
                 list-files: csv
                 filters: .github/filters.yml
+
+            - name: Tag run for codebase change
+              if: ${{ steps.path-filter.outputs.code_filters }}
+              id: code-update-tag
+              run:
+                echo "change_context_tag=build" >> $GITHUB_OUTPUT
+
+            - name: Tag run for build environment change
+              if: ${{ !steps.path-filter.outputs.code-update-tag && steps.path-filter.outputs.environment_filters }}
+              id: environment-update-tag
+              run:
+                echo "change_context_tag=env" >> $GITHUB_OUTPUT
+
+            - name: Tag run for workflow change
+              if: ${{ !steps.path-filter.outputs.environment_filters && steps.path-filter.outputs.workflow_filters }}
+              id: workflow-update-tag
+              run: 
+                echo "change_context_tag=wflow" >> $GITHUB_OUTPUT
+
+            - name: Tag run for unit test change
+              if: ${{ !steps.path-filter.outputs.workflow_filters && steps.path-filter.outputs.unit_test_filters }}
+              id: unit-test-update-tag
+              run:
+                echo "change_context_tag=test" >> $GITHUB_OUTPUT
+
+            - name: Tag run for document change
+              if: ${{ !steps.path-filter.outputs.unit_test_filters && steps.path-filter.outputs.doc_filters }}
+              id: doc-update-tag
+              run:
+                echo "change_context_tag=doc" >> $GITHUB_OUTPUT
