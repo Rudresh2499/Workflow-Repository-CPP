@@ -15,6 +15,8 @@ jobs:
     versioning:
         runs-on: [ ubuntu-latest ]
         timeout-minutes: 15
+        outputs:
+          change_context_tag: ${{ steps.code-update-tag.outputs.change_context_tag || steps.environment-update-tag.outputs.change_context_tag || steps.workflow-update-tag.outputs.change_context_tag || steps.unit-test-update-tag.outputs.change_context_tag || steps.doc-update-tag.outputs.change_context_tag }}
         
         steps:
             - name: Checkout repository
@@ -26,14 +28,6 @@ jobs:
               with:
                 list-files: csv
                 filters: .github/filters.yml
-
-            - name: Show outputs
-              run: |
-                echo ${{ steps.path-filter.outputs.code_filters }}
-                echo ${{ steps.path-filter.outputs.environment_filters }}
-                echo ${{ steps.path-filter.outputs.workflow_filters }}
-                echo ${{ steps.path-filter.outputs.unit_test_filters }}
-                echo ${{ steps.path-filter.outputs.doc_filters }}
 
             - name: Tag run for codebase change
               if: ${{ steps.path-filter.outputs.code_filters == 'true' }}
@@ -64,3 +58,7 @@ jobs:
               id: doc-update-tag
               run:
                 echo "change_context_tag=doc" >> $GITHUB_OUTPUT
+
+            - name: Show output
+              run: |
+                echo ${{ steps.code-update-tag.outputs.change_context_tag || steps.environment-update-tag.outputs.change_context_tag || steps.workflow-update-tag.outputs.change_context_tag || steps.unit-test-update-tag.outputs.change_context_tag || steps.doc-update-tag.outputs.change_context_tag }}
