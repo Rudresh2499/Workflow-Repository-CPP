@@ -24,13 +24,13 @@ jobs:
               # if: ${{ inputs.workflow_type == 'DEV' }}
               id: dev-build-tag
               run:
-                  echo "tag=DEV_$("${{ github.sha }}".SubString(0, 8))" >> $GITHUB_OUTPUT
+                  echo "tag=DEV_$(echo ${{ github.sha }} | cut -b 1-7)" >> $GITHUB_OUTPUT
 
             - name: Tag run as a PR build
               # if: ${{ inputs.workflow_type == 'DEV' }}
               id: pr-build-tag
               run:
-                  echo "tag=PR_$("${{ github.sha }}".SubString(0, 8))" >> $GITHUB_OUTPUT
+                  echo "tag=PR_$(echo ${{ github.sha }} | cut -b 1-7)" >> $GITHUB_OUTPUT
             
             - name: Tag run as a DEV build
               # if: ${{ inputs.workflow_type == 'DEV' }}
