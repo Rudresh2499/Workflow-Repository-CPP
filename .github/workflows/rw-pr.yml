@@ -30,13 +30,12 @@ jobs:
         with:
             workflow_type: ${{ inputs.workflow_type }}
 
-    build-target:
+    build-cpp-target:
         needs: versioning
-        if: ${{ contains(needs.versioning.outputs.version_tag, 'doc') }}
-        uses: ./.github/workflows/build-controller.yml
+        if: ${{ inputs.build_file_type == 'CPP' && contains(needs.versioning.outputs.version_tag, 'doc') }}
+        uses: ./.github/workflows/build-cpp.yml
         secrets: inherit
         with:
             version_tag: ${{ needs.versioning.outputs.version_tag }}
-            build_file_type: ${{ inputs.build_file_type }}
             target_linux_platform: ${{ inputs.target_linux_platform }}
             target_windows_platform: ${{ inputs.target_windows_platform }}
