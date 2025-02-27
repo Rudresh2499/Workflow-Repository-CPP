@@ -27,6 +27,14 @@ jobs:
                 list-files: csv
                 filters: .github/filters.yml
 
+            - name: Show outputs
+              run: |
+                echo ${{ steps.path-filter.outputs.code_filters }}
+                echo ${{ steps.path-filter.outputs.environment_filters }}
+                echo ${{ steps.path-filter.outputs.workflow_filters }}
+                echo ${{ steps.path-filter.outputs.unit_test_filters }}
+                echo ${{ steps.path-filter.outputs.doc_filters }}
+
             - name: Tag run for codebase change
               if: ${{ steps.path-filter.outputs.code_filters }}
               id: code-update-tag
