@@ -12,11 +12,44 @@ on:
     #             type: string
 
 jobs:
+    workflow_type_tagging:
+        runs-on: [ ubuntu-latest ]
+        timeout-minutes: 10
+
+        outputs:
+            workflow_type_tag:
+
+        steps:
+            - name: Tag run as a DEV build
+              # if: ${{ inputs.workflow_type == 'DEV' }}
+              id: dev-build-tag
+              run:
+                  echo "tag=DEV_$("${{ github.sha }}".SubString(0, 8))" >> $GITHUB_OUTPUT
+
+            - name: Tag run as a PR build
+              # if: ${{ inputs.workflow_type == 'DEV' }}
+              id: pr-build-tag
+              run:
+                  echo "tag=PR_$("${{ github.sha }}".SubString(0, 8))" >> $GITHUB_OUTPUT
+            
+            - name: Tag run as a DEV build
+              # if: ${{ inputs.workflow_type == 'DEV' }}
+              id: ci-build-tag
+              run:
+                  echo "tag=v" >> $GITHUB_OUTPUT
+
+            - name: Tag run as a DEV build
+              # if: ${{ inputs.workflow_type == 'DEV' }}
+              id: nightly-build-tag
+              run:
+                  echo "tag=NGT_$(date +'%d%m%y')" >> $GITHUB_OUTPUT    
+
     versioning:
         runs-on: [ ubuntu-latest ]
-        timeout-minutes: 15
+        timeout-minutes: 10
+        
         outputs:
-          change_context_tag: ${{ steps.code-update-tag.outputs.change_context_tag || steps.environment-update-tag.outputs.change_context_tag || steps.workflow-update-tag.outputs.change_context_tag || steps.unit-test-update-tag.outputs.change_context_tag || steps.doc-update-tag.outputs.change_context_tag }}
+            change_context_tag: ${{ steps.change-context-tag.outputs.change_context_tag }}
         
         steps:
             - name: Checkout repository
@@ -26,39 +59,40 @@ jobs:
               id: path-filter
               uses: dorny/paths-filter@v3
               with:
-                list-files: csv
-                filters: .github/filters.yml
+                  list-files: csv
+                  filters: .github/filters.yml
 
             - name: Tag run for codebase change
               if: ${{ steps.path-filter.outputs.code_filters == 'true' }}
               id: code-update-tag
               run:
-                echo "change_context_tag=build" >> $GITHUB_OUTPUT
+                  echo "tag=build" >> $GITHUB_OUTPUT
 
             - name: Tag run for build environment change
               if: ${{ steps.path-filter.outputs.code_filters == 'false' && steps.path-filter.outputs.environment_filters == 'true' }}
               id: environment-update-tag
               run:
-                echo "change_context_tag=env" >> $GITHUB_OUTPUT
+                  echo "tag=env" >> $GITHUB_OUTPUT
 
             - name: Tag run for workflow change
               if: ${{ steps.path-filter.outputs.environment_filters == 'false' && steps.path-filter.outputs.workflow_filters == 'true' }}
               id: workflow-update-tag
               run: 
-                echo "change_context_tag=wflow" >> $GITHUB_OUTPUT
+                  echo "tag=wflow" >> $GITHUB_OUTPUT
 
             - name: Tag run for unit test change
               if: ${{ steps.path-filter.outputs.workflow_filters == 'false' && steps.path-filter.outputs.unit_test_filters == 'true' }}
               id: unit-test-update-tag
               run:
-                echo "change_context_tag=test" >> $GITHUB_OUTPUT
+                  echo "tag=test" >> $GITHUB_OUTPUT
 
             - name: Tag run for document change
               if: ${{ steps.path-filter.outputs.unit_test_filters == 'false' && steps.path-filter.outputs.doc_filters == 'true' }}
               id: doc-update-tag
               run:
-                echo "change_context_tag=doc" >> $GITHUB_OUTPUT
+                  echo "tag=doc" >> $GITHUB_OUTPUT
 
-            - name: Show output
-              run: |
-                echo ${{ steps.code-update-tag.outputs.change_context_tag || steps.environment-update-tag.outputs.change_context_tag || steps.workflow-update-tag.outputs.change_context_tag || steps.unit-test-update-tag.outputs.change_context_tag || steps.doc-update-tag.outputs.change_context_tag }}
+            - name: Consolidate change context tag
+              id: change-context-tag
+              run:
+                  echo "change_context_tag=${{ steps.code-update-tag.outputs.tag || steps.environment-update-tag.outputs.tag || steps.workflow-update-tag.outputs.tag || steps.unit-test-update-tag.outputs.tag || steps.doc-update-tag.outputs.tag }}" >> $GITHUB_OUTPUT
