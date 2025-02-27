@@ -43,6 +43,13 @@ jobs:
               id: nightly-build-tag
               run:
                   echo "tag=NGT_$(date +'%d%m%y')" >> $GITHUB_OUTPUT    
+            
+            - name: Show outputs
+              run: |
+                  echo ${{ steps.dev-build-tag.outputs.tag }}
+                  echo ${{ steps.pr-build-tag.outputs.tag }}
+                  echo ${{ steps.ci-build-tag.outputs.tag }}
+                  echo ${{ steps.nightly-build-tag.outputs.tag }}
 
     versioning:
         runs-on: [ ubuntu-latest ]
