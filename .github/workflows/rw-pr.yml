@@ -1,14 +1,12 @@
 name: pr-workflow
 
 on:
-    pull_request: 
-        branches: [ master ]
-        types: [ opened, synchronize, reopened ]
-
-concurrency: 
-    group: ${{ github.ref_name }}-${{ github.workflow }}
-    cancel-in-progress: true
-
+    workflow_call: 
+        inputs:
+            workflow_type:
+                description: "Describes the workflow type"
+                required: true
+                type: string
 
 jobs:
     versioning:
