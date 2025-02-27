@@ -32,7 +32,7 @@ jobs:
 
     build-cpp-target:
         needs: versioning
-        if: ${{ inputs.build_file_type == 'CPP' && contains(needs.versioning.outputs.version_tag, 'doc') }}
+        if: ${{ inputs.build_file_type == 'CPP' && !contains(needs.versioning.outputs.version_tag, 'doc') }}
         uses: ./.github/workflows/build-cpp.yml
         secrets: inherit
         with:
